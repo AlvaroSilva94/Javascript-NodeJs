@@ -40,11 +40,21 @@ const checkExistenceOfTable = (table_name) => {
     });
   };  
 
+//Close the connection
+  const closeConnection = () => {
+    connection.end((err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  };
+
 //export to use in another js file
 module.exports = {
     connection,
     testConnection,
-    checkExistenceOfTable
+    checkExistenceOfTable,
+    closeConnection
   };
 
   

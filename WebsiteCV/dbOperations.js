@@ -64,15 +64,27 @@ const addTableColumns = (tableName, columns) => {
       });
     });
   };
-  
-//-----------------------------------------------------
 
+//to insert information in the table
+const insertInfo = (tableName, columns, values) => {
+    return new Promise((resolve, reject) => {
+      const query = `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES ('${values.join("', '")}')`;
+      connection.query(query, (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(console.log(`Values inserted into ${tableName}(${columns.join(', ')})`));
+      });
+    });
+  };
 
 module.exports = {
   atLeastOneEmpty,
   createTable,
   checkTables,
-  addTableColumns
+  addTableColumns,
+  insertInfo,
 };
 
 //Need to create a function to put information to tables in database
