@@ -13,6 +13,8 @@ const {checkTables,
         Languages,
         ProfExperience} = require("./CVinfoToConst");
 
+  const getData = require("./dbRetriveFromDB");
+
 //Wrap inside a then block to ensure the value of atleastOneEmpty
 //is updated only after the calculation is done
 checkTables().then((atLeastOneEmpty) => {
@@ -124,11 +126,142 @@ for (let i = 1; i<=4; i++){
   .catch(err => console.log(`Insertion Failed: ${err}`));
   } 
 }
+
    else {
     console.log("Tables already exist in Database! Retrieving Info!");
-
     //retrive the information from there
+    async_p_info();
+    async_contacts();
+    async_education();
+    async_competences();
+    async_languages();
+   }
+  });
+    
+// Async functions to call getData to retrieve the data and assign it 
+async function async_p_info() {
+  const data = await getData();
+  let f_personalInfo = {};
+  
+  //Store personal info
+  f_personalInfo.name = data.personalinfo_db.name;
+  f_personalInfo.job_title = data.personalinfo_db.job_title;
+  f_personalInfo.photo = data.personalinfo_db.photo;
+  f_personalInfo.description = data.personalinfo_db.description;
+  f_personalInfo.awards = data.personalinfo_db.awards;
+  f_personalInfo.awardDesc = data.personalinfo_db.awardDesc;
+  
+  return f_personalInfo;
   }
-});
 
-//After is done, need to export this to index.js to be started with npm start
+async function async_contacts(){
+  const data = await getData();
+  let f_contacts = {};
+
+  //Store contacts
+  f_contacts.email = data.contacts_db.email;
+  f_contacts.phone = data.contacts_db.phone;
+  f_contacts.address = data.contacts_db.address;
+  f_contacts.linkedin = data.contacts_db.linkedin;
+  f_contacts.github = data.contacts_db.github;
+
+  return f_contacts;
+}
+
+async function async_education(){
+  const data = await getData();
+  let f_education = [];
+
+  //Store education
+  let education1 = {};
+  let education2 = {};
+  education1.degree = data.education_db_list[0].degree;
+  education1.institution = data.education_db_list[0].institution;
+  education1.start_year = data.education_db_list[0].start_year;
+  education1.end_year =  data.education_db_list[0].end_year;
+  education2.degree = data.education_db_list[1].degree;
+  education2.institution = data.education_db_list[1].institution;
+  education2.start_year = data.education_db_list[1].start_year;
+  education2.end_year =  data.education_db_list[1].end_year;
+  f_education.push(education1);
+  f_education.push(education2);
+
+  return f_education;
+}
+
+async function async_competences(){
+  const data = await getData();
+  let f_competences = [];
+
+  //Store competences
+  for (let i = 1; i <= 10; i++) {
+    let competence = {
+        skill: data.competences_db_list[i - 1].skill,
+    };
+    f_competences.push(competence);
+  }
+
+  return f_competences;
+}
+
+async function async_languages(){
+  const data = await getData();
+  let f_languages = [];
+
+  //Store languages
+  for (let i = 1; i <= 4; i++) {
+    let language = {
+        language: data.languages_db_list[i - 1].language,
+        level: data.languages_db_list[i - 1].level,
+    };
+    f_languages.push(language);
+ }
+
+  return f_languages;
+}
+
+async function async_profexperience(){
+  const data = await getData();
+  let f_profexperience = [];
+
+  //Store professional experience from DB
+  let profexperience1 = {};
+  let profexperience2 = {};
+  let profexperience3 = {};
+
+  //For index 0
+  profexperience1.job_title = data.profexperience_db_list[0].job_title;
+  profexperience1.company = data.profexperience_db_list[0].company;
+  profexperience1.description = data.profexperience_db_list[0].description;
+  profexperience1.tech_stack = data.profexperience_db_list[0].tech_stack;
+  profexperience1.start_year = data.profexperience_db_list[0].start_year;
+  profexperience1.end_year = data.profexperience_db_list[0].end_year;
+  //For index 1
+  profexperience2.job_title = data.profexperience_db_list[1].job_title;
+  profexperience2.company = data.profexperience_db_list[1].company;
+  profexperience2.description = data.profexperience_db_list[1].description;
+  profexperience2.tech_stack = data.profexperience_db_list[1].tech_stack;
+  profexperience2.start_year = data.profexperience_db_list[1].start_year;
+  profexperience2.end_year = data.profexperience_db_list[1].end_year;
+  //For index 2
+  profexperience3.job_title = data.profexperience_db_list[2].job_title;
+  profexperience3.company = data.profexperience_db_list[2].company;
+  profexperience3.description = data.profexperience_db_list[2].description;
+  profexperience3.tech_stack = data.profexperience_db_list[2].tech_stack;
+  profexperience3.start_year = data.profexperience_db_list[2].start_year;
+  profexperience3.end_year = data.profexperience_db_list[2].end_year;
+ //Store into correct var to be imported
+  f_profexperience.push(profexperience1);
+  f_profexperience.push(profexperience2);
+  f_profexperience.push(profexperience3);
+
+  return f_profexperience;
+}
+
+module.exports =  {async_p_info,
+                  async_contacts,
+                  async_competences,
+                  async_education,
+                  async_languages,
+                  async_profexperience};
+

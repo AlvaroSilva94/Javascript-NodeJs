@@ -1,6 +1,8 @@
 const mysql = require('mysql');
 const { connection, testConnection, checkExistenceOfTable } = require('./dbConnection');
 
+const FromDBLoladageral = {};
+
 //Test to see if connected succeeded
 testConnection()
   .then(() => {
@@ -79,21 +81,28 @@ const insertInfo = (tableName, columns, values) => {
     });
   };
 
+// define a function to retrieve data from a table
+function retrieveTableData(tableName) {
+  const query = `SELECT * FROM ${tableName}`;
+
+  return new Promise((resolve, reject) => {
+    connection.query(query, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
 module.exports = {
   atLeastOneEmpty,
   createTable,
   checkTables,
   addTableColumns,
   insertInfo,
+  retrieveTableData
 };
-
-//Need to create a function to put information to tables in database
-//Need to create a function to retrive information from database
   
-//db tables: 
-//personal info (nome, titulo, foto, descrição, awards)
-//Contacts (phone, email, linkedin, github)
-//Education
-//Competencies
-//Languages
-//ProfExperience by year
+
